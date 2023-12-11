@@ -25,7 +25,7 @@ def optimal_transformation_batch(S1, S2):
 
 calib_pcd = o3d.io.read_point_cloud("calib.ply")
 
-calib_points_id = [495430, 494527, 424988, 423153]
+calib_points_id = [112011, 134491, 114419, 136922]
 
 all_calib_points = np.asarray(calib_pcd.points)
 calib_points = all_calib_points[calib_points_id]

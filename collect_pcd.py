@@ -97,7 +97,7 @@ while True:
         o3d.visualization.draw_geometries([o3d_pcd])
         o3d.io.write_point_cloud("obj.ply", o3d_pcd)
     elif args.mode == "calibration":
-        cropped = o3d_pcd.crop(o3d.geometry.AxisAlignedBoundingBox(min_bound=(-0.5, -0.5, 0.0), max_bound=(0.5, 0.5, 0.8)))
+        cropped = o3d_pcd.crop(o3d.geometry.AxisAlignedBoundingBox(min_bound=(-1, -1, 0.0), max_bound=(1, 1, 1.0)))
         o3d.visualization.draw_geometries_with_vertex_selection([cropped])
         o3d.io.write_point_cloud("calib.ply", cropped)
 
