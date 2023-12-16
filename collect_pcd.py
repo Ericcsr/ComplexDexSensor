@@ -7,10 +7,17 @@ from argparse import ArgumentParser
 
 parser = ArgumentParser()
 parser.add_argument("--mode", type=str, default="calibration")
+parser.add_argument("--camera",type=str, default="415") # ["455", "435"]
 args = parser.parse_args()
 
 pipeline = rs.pipeline()
 config = rs.config()
+if args.camera == "415":
+    config.enable_device('746112061611')
+elif args.camera == "435":
+    config.enable_device('216322071098')
+elif args.camera == "455":
+    config.enable_device('215122253322')
 
 pipeline_wrapper = rs.pipeline_wrapper(pipeline)
 pipeline_profile = config.resolve(pipeline_wrapper)
@@ -94,12 +101,14 @@ while True:
     o3d_pcd.points = o3d.utility.Vector3dVector(verts)
     o3d_pcd.colors = o3d.utility.Vector3dVector(colors)
     if args.mode == "capture":
-        o3d.visualization.draw_geometries([o3d_pcd])
-        o3d.io.write_point_cloud("obj.ply", o3d_pcd)
+        #o3d.visualization.draw_geometries([o3d_pcd])
+        o3d.io.write_point_cloud(f"obj_{args.camera}.ply", o3d_pcd)
+        if i == 10:
+            break
     elif args.mode == "calibration":
-        cropped = o3d_pcd.crop(o3d.geometry.AxisAlignedBoundingBox(min_bound=(-1, -1, 0.0), max_bound=(1, 1, 1.0)))
+        cropped = o3d_pcd.crop(o3d.geometry.AxisAlignedBoundingBox(min_bound=(-1.5, -1.5, 0.0), max_bound=(1.5, 1.5, 1.5)))
         o3d.visualization.draw_geometries_with_vertex_selection([cropped])
-        o3d.io.write_point_cloud("calib.ply", cropped)
+        o3d.io.write_point_cloud(f"calib_{args.camera}.ply", cropped)
 
     # 3 space = 0.059 m
 

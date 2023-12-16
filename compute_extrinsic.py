@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import open3d as o3d
+from argparse import ArgumentParser
 
 def optimal_transformation_batch(S1, S2):
     """
@@ -22,10 +23,13 @@ def optimal_transformation_batch(S1, S2):
     t = c2 - R@c1
     return R, t
 
+parser = ArgumentParser()
+parser.add_argument("--camera", type=str, default="415")
+args = parser.parse_args()
 
-calib_pcd = o3d.io.read_point_cloud("calib.ply")
+calib_pcd = o3d.io.read_point_cloud(f"calib_{args.camera}.ply")
 
-calib_points_id = [112011, 134491, 114419, 136922]
+calib_points_id = [206115, 188874, 186876, 172193]
 
 all_calib_points = np.asarray(calib_pcd.points)
 calib_points = all_calib_points[calib_points_id]
@@ -43,5 +47,5 @@ for i in range(len(calib_points)):
 calib_pcd.rotate(R)
 calib_pcd.translate(t)
 o3d.visualization.draw_geometries([calib_pcd])
-np.savez("tf.npz", R=R, t=t)
+np.savez(f"tf_{args.camera}.npz", R=R, t=t)
 
