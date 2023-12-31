@@ -29,12 +29,12 @@ args = parser.parse_args()
 
 calib_pcd = o3d.io.read_point_cloud(f"calib_{args.camera}.ply")
 
-calib_points_id = [206115, 188874, 186876, 172193]
+calib_points_id = [172953, 142168, 205501, 165125]
 
 all_calib_points = np.asarray(calib_pcd.points)
 calib_points = all_calib_points[calib_points_id]
 
-ref_points = np.array([[0, 0, 0], [0.059, 0, 0], [0, 0.059, 0], [0.059, 0.059, 0]])
+ref_points = np.array([[0, 0, 0], [0.175, 0, 0], [0, 0.175, 0], [0.175, 0.175, 0]])
 
 R,t = optimal_transformation_batch(calib_points, ref_points)
 R = R.numpy()

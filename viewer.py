@@ -40,7 +40,7 @@ pipeline = rs.pipeline()
 config = rs.config()
 #config.enable_device('746112061611')
 #config.enable_device('216322071098')
-config.enable_device('215122253322')
+#config.enable_device('215122253322')
 
 
 pipeline_wrapper = rs.pipeline_wrapper(pipeline)

@@ -17,7 +17,7 @@ if args.camera == "415":
 elif args.camera == "435":
     config.enable_device('216322071098')
 elif args.camera == "455":
-    config.enable_device('215122253322')
+    config.enable_device('919122071583')
 
 pipeline_wrapper = rs.pipeline_wrapper(pipeline)
 pipeline_profile = config.resolve(pipeline_wrapper)
@@ -76,7 +76,9 @@ while True:
         continue
     i+=1
 
-    #depth_frame = decimate.process(depth_frame)
+    # if args.camera == "415":
+    #     depth_frame = decimate.process(depth_frame)
+    #     color_frame = decimate.process(color_frame)
 
     depth_intrinsics = rs.video_stream_profile(depth_frame.profile).get_intrinsics()
 
@@ -102,8 +104,9 @@ while True:
     o3d_pcd.colors = o3d.utility.Vector3dVector(colors)
     if args.mode == "capture":
         #o3d.visualization.draw_geometries([o3d_pcd])
-        o3d.io.write_point_cloud(f"obj_{args.camera}.ply", o3d_pcd)
-        if i == 10:
+        time.sleep(0.02)
+        if i == 5:
+            o3d.io.write_point_cloud(f"obj_{args.camera}.ply", o3d_pcd)
             break
     elif args.mode == "calibration":
         cropped = o3d_pcd.crop(o3d.geometry.AxisAlignedBoundingBox(min_bound=(-1.5, -1.5, 0.0), max_bound=(1.5, 1.5, 1.5)))
