@@ -38,9 +38,9 @@ state = AppState()
 # Configure depth and color streams
 pipeline = rs.pipeline()
 config = rs.config()
-#config.enable_device('746112061611')
-#config.enable_device('216322071098')
-#config.enable_device('215122253322')
+config.enable_device('746112061611')
+#config.enable_device('752112070904')
+#config.enable_device('919122071583')
 
 
 pipeline_wrapper = rs.pipeline_wrapper(pipeline)

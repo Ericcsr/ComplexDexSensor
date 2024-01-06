@@ -29,7 +29,7 @@ args = parser.parse_args()
 
 calib_pcd = o3d.io.read_point_cloud(f"calib_{args.camera}.ply")
 
-calib_points_id = [172953, 142168, 205501, 165125]
+calib_points_id = [136701, 203389, 141304, 208909]
 
 all_calib_points = np.asarray(calib_pcd.points)
 calib_points = all_calib_points[calib_points_id]

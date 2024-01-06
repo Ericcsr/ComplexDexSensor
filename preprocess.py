@@ -1,20 +1,20 @@
 import numpy as np
 import open3d as o3d
-
+from scipy.spatial.transform import Rotation
 camera_list = ["455","435","415"]
 
-offsets = np.array([-0.0, -0.0, 0.0])
+
 #Rx = np.array([[1,0,0],[0,0,1],[0,-1,0]])
 pcds = []
-
+bottom = 0.015
 for camera in camera_list:
     pcd = o3d.io.read_point_cloud(f"obj_{camera}.ply")
     extrinsic = np.load(f"tf_{camera}.npz")
     R = extrinsic["R"]
     t = extrinsic["t"]
     pcd.rotate(R, center=(0,0,0))
-    pcd.translate(t+offsets)
-    cropped = pcd.crop(o3d.geometry.AxisAlignedBoundingBox(min_bound=(-0.2, -0.2, 0.01), max_bound=(0.2, 0.2, 0.3)))
+    pcd.translate(t)
+    cropped = pcd.crop(o3d.geometry.AxisAlignedBoundingBox(min_bound=(-0.2, -0.2, bottom), max_bound=(0.2, 0.2, 0.3)))
     cropped = cropped.remove_statistical_outlier(nb_neighbors=50, std_ratio=1.0)[0]
     # Compute normals
     #cropped.rotate(Rx, center=[0.0, 0.0, 0.0])
@@ -43,15 +43,19 @@ colors = np.concatenate(colors, axis=0)
 
 # Squash the points as floor
 bottom_points = points.copy()
-bottom_points[:,2] = 0.01
+bottom_points[:,2] = bottom
 bottom_colors = colors.copy()
 
 full_point_cloud.points = o3d.utility.Vector3dVector(np.vstack([points, bottom_points]))
 full_point_cloud.colors = o3d.utility.Vector3dVector(np.vstack([colors, bottom_colors]))
 sampled = full_point_cloud.farthest_point_down_sample(1000)
+# remove outliers again
+sampled = sampled.remove_statistical_outlier(nb_neighbors=20, std_ratio=1.0)[0]
 cvx_hull, _ = sampled.compute_convex_hull()
 cvx_hull.compute_vertex_normals()
 cvx_hull.compute_triangle_normals()
+# Only for table experiment
+#sampled = cvx_hull.sample_points_poisson_disk(1000)
 o3d.visualization.draw_geometries([sampled])
 o3d.visualization.draw_geometries([cvx_hull])
 o3d.io.write_point_cloud("obj_cropped.ply",sampled)

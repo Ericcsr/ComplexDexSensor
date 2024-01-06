@@ -15,7 +15,7 @@ config = rs.config()
 if args.camera == "415":
     config.enable_device('746112061611')
 elif args.camera == "435":
-    config.enable_device('216322071098')
+    config.enable_device('752112070904')
 elif args.camera == "455":
     config.enable_device('919122071583')
 
